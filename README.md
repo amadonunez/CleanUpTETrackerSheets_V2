@@ -1,36 +1,108 @@
 # CleanUpTETrackerSheets_V2
 
-Este es el repositorio del proyecto de Google Apps Script diseñado para la limpieza y optimización de hojas de cálculo de seguimiento.
+Un script de Google Apps Script para limpiar y archivar automáticamente las hojas de cálculo de seguimiento (TE Trackers), optimizando su rendimiento y manteniendo un historial de respaldos.
 
-## Funcionalidad Principal
+## Tabla de Contenidos
 
-El script está diseñado para automatizar la limpieza y el mantenimiento de las hojas de cálculo de seguimiento, como "TETrackerSheets". Su objetivo es eliminar datos obsoletos, reorganizar la información y aplicar formatos estandarizados para asegurar que la hoja de cálculo sea precisa, eficiente y fácil de usar para el seguimiento continuo.
+- [Características](#características)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Contribución](#contribución)
+- [Licencia](#licencia)
+- [Autores y Agradecimientos](#autores-y-agradecimientos)
+- [Contacto](#contacto)
 
-El proceso de limpieza y archivado incluye los siguientes pasos:
+## Características
 
-1.  **Copia de Seguridad:** Crea una copia de seguridad del archivo en una carpeta de Google Drive especificada. El nombre del archivo de respaldo sigue el formato `YYYY.MM.DD Backup of [nombre original del archivo]`.
-2.  **Registro de Archivo:** Registra la operación de respaldo en una hoja llamada "ArchiveLogs" dentro de la hoja de cálculo original, incluyendo un enlace al archivo de respaldo.
-3.  **Limpieza de Datos:** Procesa hojas específicas (ej. 'EXPO', 'IMPO') y elimina las filas con más de 3 meses de antigüedad.
-4.  **Eliminación de Filas Vacías:** Elimina las filas vacías al final de cada hoja procesada.
+- **Automatización de Limpieza:** Elimina registros antiguos (más de 3 meses) de las hojas de cálculo para mantenerlas ágiles y eficientes.
+- **Archivado Automático:** Crea copias de seguridad mensuales de las hojas de cálculo en una carpeta designada de Google Drive.
+- **Registro de Operaciones:** Mantiene un registro de cada archivado en una hoja dedicada ("ArchiveLogs") dentro de la misma hoja de cálculo, con enlaces directos a los respaldos.
+- **Configuración Flexible:** Permite especificar fácilmente qué archivos y hojas procesar a través de una configuración centralizada en el código.
+- **Disparador Mensual:** Incluye una función para crear un disparador (trigger) que ejecuta el proceso de limpieza automáticamente el primer día de cada mes.
 
-## Configuración
+## Instalación
 
-El script se configura a través de las siguientes constantes en el archivo `Code.js`:
+1.  **Clonar el Repositorio:**
 
-*   `ARCHIVE_FOLDER_ID`: El ID de la carpeta de Google Drive donde se guardarán las copias de seguridad.
-*   `VERBOSE_LOGGING`: Habilita o deshabilita los registros detallados en la consola de Apps Script.
-*   `TETRACKERS_FILES_TO_PROCESS`: Un array de objetos que define los archivos de Google Sheets a procesar. Cada objeto contiene:
-    *   `fileId`: El ID del archivo de Google Sheets.
-    *   `sheets`: Un array de objetos que especifica las hojas a procesar dentro del archivo, junto con el índice de la columna que contiene la fecha.
+    ```bash
+    git clone https://github.com/amadonunez/CleanUpTETrackerSheets_V2.git
+    cd CleanUpTETrackerSheets_V2
+    ```
+
+2.  **Instalar `clasp`:** Si no tienes `clasp` (la herramienta de línea de comandos para Apps Script), instálala globalmente:
+
+    ```bash
+    npm install -g @google/clasp
+    ```
+
+3.  **Iniciar Sesión en `clasp`:**
+
+    ```bash
+    clasp login
+    ```
+
+4.  **Subir el Proyecto a Google Apps Script:**
+
+    ```bash
+    clasp push
+    ```
 
 ## Uso
 
-Para utilizar este script, sigue estos pasos:
+1.  **Configurar el Script:**
 
-1.  **Configura las constantes:** Modifica las constantes en `Code.js` para que coincidan con tus archivos y carpetas.
-2.  **Ejecuta el script:** Ejecuta la función `runCleanupForAllTETrackers()` desde el editor de Apps Script.
-3.  **Configura el disparador (opcional):** Puedes configurar un disparador de tiempo para que el script se ejecute automáticamente. La función `createMonthlyTrigger()` crea un disparador que ejecuta el script el primer día de cada mes.
+    Abre el archivo `Code.js` y modifica las siguientes constantes para adaptarlas a tus necesidades:
 
-## Autor
+    -   `ARCHIVE_FOLDER_ID`: El ID de la carpeta de Google Drive donde se guardarán las copias de seguridad.
+    -   `VERBOSE_LOGGING`: Establécelo en `true` para ver registros detallados durante la ejecución.
+    -   `TETRACKERS_FILES_TO_PROCESS`: Un array de objetos que define los archivos de Google Sheets a procesar. Asegúrate de que los `fileId` y los nombres de las hojas (`sheetName`) sean correctos.
 
-*   **Mario Estrella**
+2.  **Ejecución Manual:**
+
+    Puedes ejecutar el script manualmente desde el editor de Google Apps Script seleccionando la función `runCleanupForAllTETrackers` y haciendo clic en "Ejecutar".
+
+3.  **Configurar el Disparador Automático:**
+
+    Para que el script se ejecute automáticamente cada mes, ejecuta la función `createMonthlyTrigger` una vez desde el editor. Esto creará un disparador que ejecutará la limpieza el primer día de cada mes.
+
+## Estructura del Proyecto
+
+```
+.
+├── appsscript.json
+├── Code.js
+└── README.md
+```
+
+-   **`Code.js`**: Contiene toda la lógica del script, incluyendo las funciones de archivado, limpieza y configuración.
+-   **`appsscript.json`**: El manifiesto del proyecto de Apps Script, que define las dependencias y permisos necesarios.
+-   **`README.md`**: La documentación del proyecto.
+
+## Tecnologías Utilizadas
+
+-   **Google Apps Script:** La plataforma de desarrollo para crear aplicaciones que se integran con los servicios de Google.
+-   **JavaScript:** El lenguaje de programación utilizado para escribir el script.
+
+## Contribución
+
+Las contribuciones son bienvenidas. Si deseas mejorar este proyecto, por favor, sigue estos pasos:
+
+1.  **Haz un Fork** del repositorio.
+2.  **Crea una nueva Rama** (`git checkout -b feature/nueva-funcionalidad`).
+3.  **Haz tus Cambios** y haz commit de ellos (`git commit -m 'Añadir nueva funcionalidad'`).
+4.  **Haz Push** a la rama (`git push origin feature/nueva-funcionalidad`).
+5.  **Abre un Pull Request**.
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+
+## Autores y Agradecimientos
+
+-   **Mario Estrella** - *Autor principal*
+
+## Contacto
+
+Para cualquier pregunta o sugerencia, por favor, abre un *issue* en este repositorio de GitHub.
